@@ -95,81 +95,78 @@
     template,
     prefarence
   ) {
-    //creator === sender
-    if (!(creator === sender) || prefarence.msgOwn) {
-      //suggestion for the creator
-      var rawtext = "";
-      rawtext = choiseMsg(
-        reason,
-        creator,
-        creation,
-        pagename,
-        sender,
-        template,
-        prefarence
-      )
-        ? choiseMsg(
-            reason,
-            creator,
-            creation,
-            pagename,
-            sender,
-            template,
-            prefarence
-          )
-        : "";
-      //console.log("main");
-      if (rawtext.trim() !== "") {
-        //notify user
-        var notifytext =
-            "\n\n" + rawtext.replace("<nowiki>", "").replace("</nowiki>", ""),
-          //edit summary
-          editsummary =
-            "[[ব্যবহারকারী:" +
-            sender +
-            "|" +
-            sender +
-            "]] [[ব্যবহারকারী:মোহাম্মদ মারুফ/notice|notice]] সরঞ্জামটি ব্যবহার করে [[ব্যবহারকারী:" +
-            creator +
-            "|" +
-            creator +
-            "]] এর আলাপ পাতায় " +
-            prefarence.summary;
-        //sidebar button
-        //putting user talkpage info here
-        if (creator) {
-          var usertalkpage = new Morebits.wiki.page(
-            "ব্যবহারকারী আলাপ:" + creator,
-            "মূল অবদানকারীকে জানানো হচ্ছে (" + creator + ")"
-          );
-          usertalkpage.setAppendText(notifytext);
-          usertalkpage.setEditSummary(editsummary);
-          //usertalkpage.setChangeTags("twinkle"); //বার্তাপ্রদান
-          usertalkpage.setCreateOption("recreate");
-          usertalkpage.setWatchlist("1 month");
-          usertalkpage.setFollowRedirect(true, false);
-          usertalkpage.append(
-            function onNotifySuccess() {
-              // add this nomination to the user's userspace log, if the user has enabled it
-              /* if (params.lognomination) {
+    //suggestion for the creator
+    var rawtext = "";
+    rawtext = choiseMsg(
+      reason,
+      creator,
+      creation,
+      pagename,
+      sender,
+      template,
+      prefarence
+    )
+      ? choiseMsg(
+          reason,
+          creator,
+          creation,
+          pagename,
+          sender,
+          template,
+          prefarence
+        )
+      : "";
+    //console.log("main");
+    if (rawtext.trim() !== "") {
+      //notify user
+      var notifytext =
+          "\n\n" + rawtext.replace("<nowiki>", "").replace("</nowiki>", ""),
+        //edit summary
+        editsummary =
+          "[[ব্যবহারকারী:" +
+          sender +
+          "|" +
+          sender +
+          "]] [[ব্যবহারকারী:মোহাম্মদ মারুফ/notice|notice]] সরঞ্জামটি ব্যবহার করে [[ব্যবহারকারী:" +
+          creator +
+          "|" +
+          creator +
+          "]] এর আলাপ পাতায় " +
+          prefarence.summary;
+      //sidebar button
+      //putting user talkpage info here
+      if (creator) {
+        var usertalkpage = new Morebits.wiki.page(
+          "ব্যবহারকারী আলাপ:" + creator,
+          "মূল অবদানকারীকে জানানো হচ্ছে (" + creator + ")"
+        );
+        usertalkpage.setAppendText(notifytext);
+        usertalkpage.setEditSummary(editsummary);
+        //usertalkpage.setChangeTags("twinkle"); //বার্তাপ্রদান
+        usertalkpage.setCreateOption("recreate");
+        usertalkpage.setWatchlist("1 month");
+        usertalkpage.setFollowRedirect(true, false);
+        usertalkpage.append(
+          function onNotifySuccess() {
+            // add this nomination to the user's userspace log, if the user has enabled it
+            /* if (params.lognomination) {
             Twinkle.speedy.callbacks.user.addToLog(params, initialContrib);
           } */ // যদি কোনোদিন টুইংকেল আসে তাহলে এটা আবার চালু করতে হবে
-              alertv = "প্রণেতাকে জানানো হয়েছে";
-            },
-            function onNotifyError() {
-              /*           // if user could not be notified, log nomination without mentioning that notification was sent
+            alertv = "প্রণেতাকে জানানো হয়েছে";
+          },
+          function onNotifyError() {
+            /*           // if user could not be notified, log nomination without mentioning that notification was sent
           if (params.lognomination) {
             var usl = new Morebits.userspaceLogger(
               Twinkle.getPref("speedyLogPageName")
             );
           } */ // যদি কোনোদিন টুইংকেল আসে তাহলে এটা আবার চালু করতে হবে
-              throw new Error("নোটিশ পাঠানো যায়নি");
-            }
-          );
-        }
-      } else {
-        throw new Error("নোটিশ পাঠানো যায়নি");
+            throw new Error("নোটিশ পাঠানো যায়নি");
+          }
+        );
       }
+    } else {
+      throw new Error("নোটিশ পাঠানো যায়নি");
     }
   }
   //counting on date
@@ -247,14 +244,27 @@
         var sender = mw.config.get("wgUserName");
         //page name
         var pagename = mw.config.get("wgPageName").replace(/_/g, " ");
-        main(creator, creation, sender, reason, pagename, template, prefarence);
+        //creator === sender
+        if (!(creator === sender) || prefarence.msgOwn) {
+          main(
+            creator,
+            creation,
+            sender,
+            reason,
+            pagename,
+            template,
+            prefarence
+          );
+          return (alertv = alertv ? alertv : "প্রণেতাকে জানানো হয়েছে");
+        }
       });
-      return (alertv = alertv ? alertv : "প্রণেতাকে জানানো হয়েছে");
     } else {
       if (!reason) {
         throw new Error("বার্তা প্রদানের কারণ উল্লেখ করেননি");
       } else if (!template) {
-        throw new Error("নোটিশ পাঠানো লেটের নাম উল্লেখ করেননি");
+        throw new Error(
+          "নোটিশ পাঠানোর জন্য একটি উইকি টেমপ্লেটের প্রয়োজন, যা অনুপস্থিত রয়েছে"
+        );
       }
     }
   };
