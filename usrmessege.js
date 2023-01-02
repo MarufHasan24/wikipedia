@@ -8,41 +8,19 @@
    * Config directives in:   ব্যবহারকারী:মোহাম্মদ মারুফ/বার্তাপ্রদান.js
    * creator:                মোহাম্মদ মারুফ
    * mentored by:            MdsShakil
+   * version:                3.0.1
+   * new features:           faster, ask you if it thinks user is not active
    */
-  //dependencies
-  var sidebarObj = {
-    vector: {
-      area: "#p-cactions ul",
-      class: "mw-list-item",
-    },
-    monobook: {
-      area: "#p-personal ul",
-      class: "mw-list-item",
-    },
-    timeless: {
-      area: "#p-personal ul",
-      class: "mw-list-item",
-    },
-    minerva: {
-      area: "#p-tb",
-      class: "toggle-list-item",
-    },
-    "vector-2022": {
-      area: "#p-cactions ul",
-      class: "mw-list-item",
-    },
-  };
+  // dependencies
+  const api = new mw.Api();
+  const pagename = mw.config.get("wgPageName");
+  const skin = mw.config.get("skin");
+  const today = new Date();
   mw.loader.load(
     "/w/index.php?title=ব্যবহারকারী:মোহাম্মদ মারুফ/বার্তাপ্রদান.css&action=raw&ctype=text/css",
     "text/css"
   );
-  var skin = mw.config.get("skin");
-  //desided sidebar
-  var li = document.createElement("li");
-  li.id = "t-usrmessage";
-  li.className = sidebarObj[skin].class;
-  document.querySelector(sidebarObj[skin].area).appendChild(li);
-  var sidebar = document.getElementById("t-usrmessage");
+  var area = skin === "minerva" ? "p-tb" : "p-cactions";
   //সমস্যা
   var problems = [
     /* "COI", */ // প্রয়োজন নেই
@@ -487,107 +465,88 @@
   problemDes["পাদটীকাহীন"] = problemDes["পাদটীকা নেই"];
   problemDes["আরও পাদটীকা প্রয়োজন"] = problemDes["আরও পাদটীকা"];
   if (
-    mw.config.get("wgSiteName") === "উইকিপিডিয়া" &&
     mw.config.get("wgNamespaceNumber") === 0 &&
     mw.config.get("wgArticleId") &&
     !mw.config.get("wgIsMainPage")
   ) {
-    sidebar.innerHTML += '<a id="msg-send-tool">অপেক্ষা করুন</a>';
-    try {
-      if (skin === "minerva") {
-        sidebar.innerHTML =
-          '<a id="msg-send-tool"><span class="mw-ui-icon" id="usermsg-icon"></span><span>অপেক্ষা করুন</span></a>';
-        document.getElementById("page-actions-overflow").onclick = finalTouch;
-      } else if (skin == "vector" || skin == "vector-2022") {
-        document.getElementById("p-cactions").onmouseover = finalTouch;
-      } else {
-        finalTouch();
-      }
-    } catch (e) {
-      document.getElementById("msg-send-tool").innerHTML =
-        '<span style="color:red;">লোড করা সম্ভব হয়নি</span>';
-    }
-  } else {
-    return;
-  }
-  //fainally loded
-  function finalTouch() {
-    creatorLookOut(async function (params) {
-      var creator = params.initialContrib;
+    // added button to the page
+    var button = $(
+      mw.util.addPortletLink(area, "#", "বার্তা দিন", "msg-send-tool")
+    );
+    // find the creator of the page
+    creatorLookOut(pagename, function (params) {
+      var creator = params.creator;
       var creation = params.creation;
-      var isMultiple = false;
       var sender = mw.config.get("wgUserName");
-      //page name
-      var pagename = mw.config.get("wgPageName").replace(/_/g, " ");
-      //received all tags
-      var tagsInfo = await fillterTags(pagename),
-        tags,
-        doButton = document.getElementById("msg-send-tool");
-      if (typeof Morebits.wiki.page === "undefined") {
-        await Morebits.wiki.page;
-      }
-      if (skin === "minerva") {
-        doButton.innerHTML =
-          '<span class="mw-ui-icon" id="usermsg-icon"></span><span>বার্তা দিন</span>';
-      } else {
-        doButton.innerHTML = "বার্তা দিন";
-      }
-      tags = tagsInfo;
-      isMultiple = typeof tags === "object" && tags.length === 1 ? false : true;
-      // added button to sidebar
-      doButton.onclick = function () {
-        var today = new Date();
-        var diff = today - new Date(creation);
-        var longLongAgo = Math.floor(diff / (1000 * 60 * 60 * 24));
-        var msg =
-          longLongAgo > 365
-            ? longLongAgo +
-              " দিন আগে " +
+      button.click(function () {
+        // users last contribution
+        usrLstContribution(creator, function (usrdata) {
+          var lastCdate = usrdata.date;
+          var lastCdays = usrdata.days;
+          var diff = today - new Date(creation);
+          var longLongAgo = Math.floor(diff / (1000 * 60 * 60 * 24));
+          var msg = "আপনি কি " + creator + "-কে বার্তা দিতে চান?";
+          if (lastCdays > 30) {
+            msg =
+              "ব্যবহারকারী:" +
               creator +
-              " এই পাতাটি তৈরি করেছেন, হয়তো প্রণেতা সর্বশেষ পরিবর্তনগুলো করেননি। বার্তা দেওয়ার পূর্বে পাতার ইতিহাস যাচাই করে নিন। আপনি কি এখনি " +
-              creator +
-              "-কে বার্তা দিতে চান?"
-            : "আপনি কি " + creator + "-কে বার্তা দিতে চান?";
-        if (creator === sender) {
-          msg = "আপনি কি নিজেকে বার্তা দিতে চান?";
-          if (confirm(msg)) {
-            main(creator, creation, sender, tags, pagename, params, isMultiple);
+              " সর্বশেষ সম্পাদনা করেছেন " +
+              lastCdate +
+              " তারিখে অর্থাৎ " +
+              lastCdays +
+              " দিন আগে। আপনি কি তাঁকে বার্তা দিতে চান?";
+            if (longLongAgo > 365) {
+              msg =
+                "ব্যবহারকারী:" +
+                creator +
+                " সর্বশেষ সম্পাদনা করেছেন " +
+                lastCdate +
+                " তারিখে অর্থাৎ " +
+                lastCdays +
+                " দিন আগে এবং তিনি এই পাতাটি " +
+                longLongAgo +
+                " দিন আগে তৈরি করেছেন, হয়তো প্রণেতা সর্বশেষ পরিবর্তনগুলোও করেননি। বার্তা দেওয়ার পূর্বে পাতার ইতিহাস যাচাই করে নিন। আপনি কি তাঁকে বার্তা দিতে চান?";
+            }
           } else {
-            alert("বার্তা প্রদান বাতিল করা হয়েছে");
-            return;
+            if (longLongAgo > 365) {
+              msg =
+                "ব্যবহারকারী:" +
+                creator +
+                " সর্বশেষ সম্পাদনা করেছেন " +
+                lastCdate +
+                " তারিখে অর্থাৎ " +
+                lastCdays +
+                " দিন আগে এবং তিনি এই পাতাটি " +
+                longLongAgo +
+                " দিন আগে তৈরি করেছেন, হয়তো প্রণেতা সর্বশেষ পরিবর্তনগুলোও করেননি। বার্তা দেওয়ার পূর্বে পাতার ইতিহাস যাচাই করে নিন। আপনি কি তাঁকে বার্তা দিতে চান?";
+            }
           }
-        } else {
-          if (confirm(msg)) {
-            main(creator, creation, sender, tags, pagename, params, isMultiple);
-          } else {
-            alert("বার্তা প্রদান বাতিল করা হয়েছে");
-            return;
-          }
-        }
-      };
+          fillterTags(pagename, function (tags) {
+            var multiple = tags.length > 1 ? true : false;
+            // check if the creator is the sender
+            if (creator === sender) {
+              msg = "আপনি কি নিজেকে বার্তা দিতে চান?";
+              if (confirm(msg)) {
+                main(creator, creation, sender, tags, pagename, multiple);
+              } else {
+                alert("বার্তা প্রদান বাতিল করা হয়েছে");
+                return;
+              }
+            } else {
+              if (confirm(msg)) {
+                main(creator, creation, sender, tags, pagename, multiple);
+              } else {
+                alert("বার্তা প্রদান বাতিল করা হয়েছে");
+                return;
+              }
+            }
+          });
+          // all tags recieved successfully
+        });
+      });
     });
   }
-  //looking for the page creator
-  function creatorLookOut(callbacks) {
-    var params = {};
-    var ts = new Morebits.wiki.page(mw.config.get("wgPageName"));
-    ts.setFollowRedirect(true); // for NPP, and also because redirects are ineligible for PROD
-    ts.setLookupNonRedirectCreator(true); // Look for author of first non-redirect revision
-    ts.lookupCreation(
-      function (pageobj) {
-        params.initialContrib = pageobj.getCreator();
-        params.creation = pageobj.getCreationTimestamp();
-        /*         pageobj
-          .getStatusElement()
-          .info(params.initialContrib + " এই পাতাটি তৈরি করেছেন"); */
-        callbacks(params);
-      },
-      function (pageobj) {
-        pageobj.getStatusElement().info("কোন প্রণেতা পাওয়া যায়নি");
-      }
-    );
-  }
-  //choise message
+  //choise message for the user based on the tags
   function choiseMsg(tags, multiple, creator, creation, pagename, sender) {
     var strObj = {
       string: "",
@@ -630,7 +589,9 @@
               '">' +
               translateNumbers(creationDate.days) +
               " দিন পূর্বে </span>"
-            : "দিন"; //if the page is created today
+            : "দিন";
+        console.log(creationDate.days);
+        //if the page is created today
         //string operation
         if (typeof strObj.problems === "object") {
           if (!multiple) {
@@ -668,13 +629,14 @@
     }
   }
   //main function to exicute
-  function main(creator, creation, sender, tags, pagename, params, multiple) {
+  function main(creator, creation, sender, tags, pagename, multiple) {
     //suggestion for the creator
     var rawtext = "";
     rawtext =
       choiseMsg(tags, multiple, creator, creation, pagename, sender) ?? "";
     if (rawtext.trim() !== "") {
       //notify user
+
       var notifytext =
           "\n\n" + rawtext.replace("<nowiki>", "").replace("</nowiki>", ""),
         //edit summary
@@ -688,72 +650,42 @@
           "|" +
           creator +
           "]]কে বার্তা প্রদান করেছেন";
-      //sidebar button
-      //putting user talkpage info here
-      if (creation)
-        var usertalkpage = new Morebits.wiki.page(
-          "ব্যবহারকারী আলাপ:" + creator,
-          "মূল অবদানকারীকে জানানো হচ্ছে (" + creator + ")"
-        );
-      usertalkpage.setAppendText(notifytext);
-      usertalkpage.setEditSummary(editsummary);
-      //usertalkpage.setChangeTags("twinkle"); //বার্তাপ্রদান
-      usertalkpage.setCreateOption("recreate");
-      usertalkpage.setWatchlist(Twinkle.getPref("watchSpeedyUser"));
-      usertalkpage.setFollowRedirect(true, false);
-      usertalkpage.append(
-        function onNotifySuccess() {
-          // add this nomination to the user's userspace log, if the user has enabled it
-          if (params.lognomination) {
-            Twinkle.speedy.callbacks.user.addToLog(params, initialContrib);
-          }
-          alert("সফলভাবে বার্তা প্রদান করা হয়েছে");
-        },
-        function onNotifyError() {
-          // if user could not be notified, log nomination without mentioning that notification was sent
-          if (params.lognomination) {
-            Twinkle.speedy.callbacks.user.addToLog(params, null);
-          }
-          alert("বার্তা প্রদান করা যায়নি");
-        }
-      );
-    }
-  }
-  //async function to get tags
-  async function getTags(pagename) {
-    var url =
-      "https://bn.wikipedia.org/w/api.php?" +
-      new URLSearchParams({
-        origin: "*",
-        action: "parse",
-        page: pagename,
-        format: "json",
-      });
-
-    var req = await fetch(url);
-    var json = await req.json();
-    return json.parse.templates;
-  }
-  //filltering tags from template
-  async function fillterTags(pagename) {
-    var rawdata = await getTags(pagename);
-    var data = rawdata;
-    var templates = data.map(function (elem) {
-      var tempName = elem["*"].replace("টেমপ্লেট:", "");
-      return tempName;
-    });
-    var tags = templates.filter((value) => problems.includes(value));
-    if (tags.length !== 0) {
-      return tags;
+      // if the user is exist
+      if (creator) {
+        var talkpage = "ব্যবহারকারী আলাপ:" + creator;
+        getOldText(talkpage, function (oldtext) {
+          var params = {
+            action: "edit",
+            title: talkpage,
+            text: oldtext + notifytext,
+            summary: editsummary,
+          };
+          //edit the talk page
+          api.postWithToken("csrf", params).then(function (data) {
+            if (data.edit.result === "Success") {
+              addToWatchlist(talkpage, function (data) {
+                if (data.error) {
+                  alert(
+                    "বার্তা প্রদান করা হয়েছে, কিন্তু আপনার নজরতালিকায় যোগ করা যায়নি"
+                  );
+                } else {
+                  alert("সফলভাবে বার্তা প্রদান করা হয়েছে");
+                }
+              });
+            } else {
+              alert("বার্তা প্রদান করা যায়নি");
+            }
+          });
+        });
+      }
     } else {
-      return "কোনো ট্যাগ নেই";
+      alert("বার্তা প্রদান করা যায়নি");
     }
   }
   //counting on date
   function countDay(date) {
-    var today = new Date();
     var diff = today - new Date(date);
-    var diffArray = new Date(date);
+    var diffdate = new Date(date);
     var monthArray = [
       "জানুয়ারি",
       "ফেব্রুয়ারি",
@@ -770,11 +702,11 @@
     ];
     var diffObj = {
       date:
-        translateNumbers(diffArray.getDate()) +
+        translateNumbers(diffdate.getDate()) +
         " " +
-        monthArray[diffArray.getMonth()] +
+        monthArray[diffdate.getMonth()] +
         ", " +
-        translateNumbers(diffArray.getFullYear()),
+        translateNumbers(diffdate.getFullYear()),
       days: Math.floor(diff / (1000 * 60 * 60 * 24)),
     };
     return {
@@ -799,9 +731,127 @@
       .replace(/9/gi, "৯");
     return result;
   }
+  //check if the user is an ip
   function ipCheck(creator) {
     var ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
     var ipv6Regex = /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
     return ipv4Regex.test(creator) || ipv6Regex.test(creator);
+  }
+  // look out for the page creation
+  function creatorLookOut(pagename, callback) {
+    var params = {
+      action: "query",
+      format: "json",
+      prop: "revisions",
+      titles: pagename,
+      formatversion: "2",
+      rvprop: "timestamp|user|comment|tags",
+      rvlimit: "1",
+      rvdir: "newer",
+    };
+    api
+      .get(params)
+      .then(function (data) {
+        var revision = data.query.pages[0].revisions[0],
+          result = {
+            creator: revision.user,
+            creation: revision.timestamp,
+            summary: revision.comment,
+            tags: revision.tags,
+          };
+        callback(result);
+      })
+      .fail(function (error) {
+        console.error(error);
+      });
+  }
+  //get and fillter tags from template
+  function fillterTags(pagename, callback) {
+    var params = {
+      action: "parse",
+      page: pagename,
+      format: "json",
+    };
+    api
+      .get(params)
+      .then(function (data) {
+        var data = data.parse.templates;
+        var templates = data.map(function (elem) {
+          var tempName = elem["*"].replace("টেমপ্লেট:", "");
+          return tempName;
+        });
+        var tags = templates.filter((value) => problems.includes(value));
+        if (tags.length !== 0) {
+          callback(tags);
+        } else {
+          callback(false);
+        }
+      })
+      .fail(function (error) {
+        console.error(error);
+      });
+  }
+  //user is active or not
+  function usrLstContribution(username, callback) {
+    var params = {
+      action: "query",
+      format: "json",
+      list: "usercontribs",
+      formatversion: "2",
+      uclimit: "1",
+      ucuser: username,
+      ucnamespace: "*",
+    };
+    api
+      .get(params)
+      .then(function (data) {
+        var lastContribution = data.query.usercontribs[0].timestamp;
+        var dateday = countDay(lastContribution);
+        var result = {
+          date: dateday.date,
+          days: dateday.days,
+        };
+        callback(result);
+        console.log(result);
+      })
+      .fail(function (error) {
+        console.error(error);
+      });
+  }
+  //set watchlist
+  function addToWatchlist(page, callback) {
+    var date = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000); //7 days
+    var params = {
+      action: "watch",
+      format: "json",
+      titles: page,
+      expiry: date.toISOString(),
+    };
+    api
+      .postWithToken("watch", params)
+      .done(function (data) {
+        callback(data);
+      })
+      .fail(function (error) {
+        console.error(error);
+      });
+  }
+  //get old text
+  function getOldText(page, callback) {
+    var params = {
+      action: "parse",
+      format: "json",
+      page: page,
+      prop: "wikitext",
+      formatversion: "2",
+    };
+    api
+      .get(params)
+      .done(function (data) {
+        callback(data.parse.wikitext);
+      })
+      .fail(function (error) {
+        console.error(error);
+      });
   }
 })();
