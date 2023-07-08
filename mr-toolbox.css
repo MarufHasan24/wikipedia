@@ -1,0 +1,84 @@
+#mr-toolbox-opener {
+    content: ">>";
+    position: fixed;
+    bottom: calc(10% - 25px);
+    right: auto;
+    left: 0;
+    z-index: 1;
+    width: 50px;
+    height: 50px;
+    background: #000;
+    color: #fff;
+    border-radius: 0 5px 5px 0;
+    text-align: center;
+    line-height: 50px;
+    font-size: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#mr-toolbox-opener.opened {
+    transform: translateX(calc(100vw - 50px));
+}
+
+#mr-toolbox-opener:hover {
+    background: #fff;
+    color: #000;
+}
+
+#mr-toolbox-opener.opened::after {
+    content: "<<";
+}
+
+#mr-toolbox-opener::after {
+    content: ">>";
+}
+
+#mr-toolbox {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    width: 0%;
+    min-height: 20%;
+    max-height: 50%;
+    height: auto;
+    background: #e2e2e2;
+    color: #333333;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#mr-toolbox.opened {
+    width: calc(100% - 50px);
+}
+
+#mr-toolbox div,
+#mr-toolbox button {
+    padding: 10px calc(1vw + 10px);
+    border: none;
+    margin: 10px;
+}
+
+#mr-toolbox div {
+    background: #bbb;
+    color: #212;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+#mr-toolbox button {
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#mr-toolbox button:hover {
+    background: #333333;
+    color: #e2e2e2;
+}

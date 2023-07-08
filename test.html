@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="mr-toolbox.css">
+</head>
+
+<body>
+    <p>
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Natus aliquid facilis quas pariatur totam! Ab rerum,
+        nisi
+        vero consequuntur impedit quia dolorem nemo suscipit dolore quam, vel reiciendis, ea magni!
+    </p>
+    <p class="lorem">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates sequi repudiandae suscipit fugiat reiciendis
+        consectetur iste ducimus vitae voluptate id, eos dolore, dignissimos illum optio laborum doloribus ipsa
+        exercitationem quas?
+    </p>
+    <p>
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Natus aliquid facilis quas pariatur totam! Ab rerum,
+        nisi
+        vero consequuntur impedit quia dolorem nemo suscipit dolore quam, vel reiciendis, ea magni!
+    </p>
+    <p class="lorem">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates sequi repudiandae suscipit fugiat reiciendis
+        consectetur iste ducimus vitae voluptate id, eos dolore, dignissimos illum optio laborum doloribus ipsa
+        exercitationem quas?
+    </p>
+    <p>
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Natus aliquid facilis quas pariatur totam! Ab rerum,
+        nisi
+        vero consequuntur impedit quia dolorem nemo suscipit dolore quam, vel reiciendis, ea magni!
+    </p>
+    <p class="lorem">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates sequi repudiandae suscipit fugiat reiciendis
+        consectetur iste ducimus vitae voluptate id, eos dolore, dignissimos illum optio laborum doloribus ipsa
+        exercitationem quas?
+    </p>
+    <p>
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Natus aliquid facilis quas pariatur totam! Ab rerum,
+        nisi
+        vero consequuntur impedit quia dolorem nemo suscipit dolore quam, vel reiciendis, ea magni!
+    </p>
+    <p class="lorem">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates sequi repudiandae suscipit fugiat reiciendis
+        consectetur iste ducimus vitae voluptate id, eos dolore, dignissimos illum optio laborum doloribus ipsa
+        exercitationem quas?
+    </p>
+</body>
+<script src="wikial.js"></script>
+<script>
+    var wikial = new Wikial("alert");
+    var wikial2 = new Wikial("case");
+    //wikial.log("hello world");
+    var to = 15
+    var cae = wikial2.case({
+        title: "Wikial 1",
+        content: "$from of $to work has been done",
+        from: 0,
+        to: to,
+        type: "success"
+    })
+    i = 0;
+    function a(i) {
+        if (i < to) {
+            fetch("https://6wrlmkp9u2.execute-api.us-east-1.amazonaws.com/?sleep=" + Math.floor(Math.random() * 700))
+                .then(response => response.json())
+                .then(data => {
+                    cae.update({ type: ["success", "info", "warning", "error", "none"][Math.floor(Math.random() * 3) + 2] })
+                    i++;
+                    console.log(i, data.params.sleep);
+                    a(i)
+                });
+        } else {
+            wikial2.alert({
+                title: "Wikial 2",
+                content: "All work has been done",
+                type: "success"
+            })
+
+        }
+    }
+    a(i)
+</script>
+<style>
+    .wikial {
+        background-color: #f1f1f1;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 6px 12px;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        width: fit-content;
+        display: block;
+        margin: 0 auto;
+        position: fixed;
+        top: 5%;
+        left: 50%;
+        transform: translate(-50%, 0%);
+
+    }
+
+    .wikial #wikial-title {
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-bottom: 0.5em;
+        text-transform: capitalize;
+        min-width: 150px;
+    }
+
+    .wikial #wikial-content {
+        font-size: 1em;
+        font-weight: normal;
+        margin-bottom: 0.5em;
+        text-transform: capitalize;
+        min-width: 150px;
+    }
+</style>
+
+<div
+    style="width: 100%; display: flex; align-items: center; justify-content: space-evenly; flex-direction: row; flex-wrap: wrap;">
+    <div style="width: 100%; max-width:650px;">
+        <div style="box-shadow:gray 1px 1px 4px; margin-bottom:1em; padding:1em;">
+            <div style="color:gray; font-size:1.5em;">
+                [[file:Quill and ink.svg|30px|left]]নির্বাচিত রসোক্তি
+            </div>
+            <div style="margin:1em;">{{প্রধান পাতা রসোক্তি}}</div>
+        </div>
+    </div>
+
+    <div
+        style="box-shadow:gray 1px 1px 4px; margin-bottom:1em; margin-left:1em; padding:1em; width: 100%; max-width:650px;">
+        <div style="color:gray; font-size:1.5em;">
+            বিষয়শ্রেণী অনুসারে[[চিত্র:Category icon noun.png|30px|right]]
+        </div>
+        <div style="margin:1em;">{{প্রধান পাতা বিষয়শ্রেণী অনুসারে}}</div>
+    </div>
+</div>
+
+</html>
