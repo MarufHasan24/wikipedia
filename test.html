@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta title="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="mr-toolbox.css">
 </head>
@@ -52,7 +52,7 @@
     </p>
 </body>
 <script src="wikial.js"></script>
-<script>
+<!-- <script>
     var wikial = new Wikial("alert");
     var wikial2 = new Wikial("case");
     //wikial.log("hello world");
@@ -85,7 +85,7 @@
         }
     }
     a(i)
-</script>
+</script> -->
 <style>
     .wikial {
         background-color: #f1f1f1;
@@ -121,24 +121,71 @@
     }
 </style>
 
-<div
-    style="width: 100%; display: flex; align-items: center; justify-content: space-evenly; flex-direction: row; flex-wrap: wrap;">
-    <div style="width: 100%; max-width:650px;">
-        <div style="box-shadow:gray 1px 1px 4px; margin-bottom:1em; padding:1em;">
-            <div style="color:gray; font-size:1.5em;">
-                [[file:Quill and ink.svg|30px|left]]নির্বাচিত রসোক্তি
-            </div>
-            <div style="margin:1em;">{{প্রধান পাতা রসোক্তি}}</div>
-        </div>
-    </div>
-
-    <div
-        style="box-shadow:gray 1px 1px 4px; margin-bottom:1em; margin-left:1em; padding:1em; width: 100%; max-width:650px;">
-        <div style="color:gray; font-size:1.5em;">
-            বিষয়শ্রেণী অনুসারে[[চিত্র:Category icon noun.png|30px|right]]
-        </div>
-        <div style="margin:1em;">{{প্রধান পাতা বিষয়শ্রেণী অনুসারে}}</div>
+<div>
+    <div class="tray">
+        <label for="title">Script title or url</label>
+        <input id="title" type="text" required />
+        <label for="wiki">Target wiki (if current wiki, then no required)</label>
+        <input id="wiki" type="text" placeholder="EG: bn.wikipedia.org" />
+        <label for="expire-time">Expire time (Leave it blank for forever)</label>
+        <input id="expire-time" type="time" placeholder="EG: 12:05 AM" />
+        <label for="expire-time">Expire date (Leave it blank for forever)</label>
+        <input id="expire-time" type="date" placeholder=" EG: 2021-12-31" />
+        <button id="tray-button">Import</button>
     </div>
 </div>
+<script>
+    var api = new mw.Api();
+    var tray = document.querySelector(".tray");
+    var title = document.querySelector("#title");
+    var wiki = document.querySelector("#wiki");
+    var button = document.querySelector("#tray-button");
+    var expireitime = document.querySelector("#expire-time");
+    button.addEventListener("click", function () {
+        var urlregex = /^(https:\/\/)(\w{2,4}|commons)\.([a-z]+\.org)\/wiki\/.+\/.+\.js$/
+        var titleregex = /^[^https:]+\:.+\/.+\.js$/
+        if (title.value.match(urlregex)) {
+            var url = title.value + "?action=raw&origin=*";
+        } else if (title.value.match(titleregex)) {
+            if (wiki.trim()) {
+                var url = "https://" + wiki.trim() + "/w/index.php?title=" + title.value.split(":")[1] + "&action=raw";
+            } else {
+                var url = location.origin + "w/index.php?title=" + title.value + "&action=raw&ctype=text/javascript";
+            }
+        } else {
+            alert("Invalid script title or url");
+            return;
+        }
+        if (expireitime.value) {
+            var expire = new Date(expireitime.value).getTime();
+        } else {
+            saveincommons(url);
+        }
+        //search for script
+        fetch(url)
+            .then(response => response.text())
+            .then(data => {
+                saveIt(url, data);
+            })
+            .catch(err => {
+                alert("Error: " + err);
+            })
+    })
+    function saveIt(url, data) {
+        var storage = localStorage.getItem("mr-script-tray");
+        if (storage) {
+            var scripts = JSON.parse(storage);
+        } else {
+            var scripts = [];
+        }
+        scripts.push({ url, data });
+        localStorage.setItem("mr-script-tray", JSON.stringify(scripts));
+    }
+    function saveincommons(url) {
+        if (url.includes("title")) {
+            
+        }else
+    }
+</script>
 
 </html>

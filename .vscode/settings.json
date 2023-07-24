@@ -2,6 +2,10 @@
   "editor.formatOnSave": true,
   "C_Cpp.errorSquiggles": "disabled",
   "cmake.configureOnOpen": false,
+  "files.associations": {
+    "*.jsr": "javascript",
+    "unistd.h": "c"
+  }
   /* "editor.formatOnSaveMode": "modifications",
   "editor.formatOnPaste": true,
   "MinifyAll.terserMinifyOptions": {
