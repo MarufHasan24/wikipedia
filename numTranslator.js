@@ -20,30 +20,38 @@
     "text/css"
   );
   //script is under construction
-  if (mw.config.get("wgUserName") !== "মোহাম্মদ মারুফ") {
+  if (mw.config.get("wgUserName") == "মোহাম্মদ মারুফ") {
     //comment it out in common.js
-    alert(
-      "Brother, don't be sad. You can't use thos script now. It's not ready yet. Thanks for your interest.❤❤❤"
-    );
     var api = new mw.Api();
     api
       .get({
         action: "parse",
         prop: "wikitext",
-        title: "ব্যবহারকারী:" + mw.config.get("wgUserName") + "/common.js",
+        page: "ব্যবহারকারী:" + mw.config.get("wgUserName") + "/common.js",
       })
       .then(function (data) {
-        var content = data.replace(
-          /^(mw\.loader\.load|inportScript).+?\/numTranslator\.js.+\);?/gm,
-          function (match) {
-            return "/* " + match + " */";
-          }
-        );
-        api.post({
-          action: "edit",
-          title: "ব্যবহারকারী:" + mw.config.get("wgUserName") + "/common.js",
-          text: content,
-        });
+        api
+          .postWithToken("csrf", {
+            action: "edit",
+            title: "ব্যবহারকারী:" + mw.config.get("wgUserName") + "/common.js",
+            text:
+              data.parse.wikitext["*"].replace(
+                /^(mw\.loader\.load|inportScript).+?\/numTranslator\.js.+?\);?/gm,
+                function (match) {
+                  return "/* " + match + " */";
+                }
+              ) ||
+              (function () {
+                throw "error";
+              })(),
+          })
+          .then(function (e) {
+            if (e.edit.result === "Success") {
+              alert(
+                "Brother, don't be sad. You can't use thos script now. It's not ready yet. Thanks for your interest.❤❤❤"
+              );
+            }
+          });
       });
   }
   //check if the page is in main namespace
