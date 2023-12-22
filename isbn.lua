@@ -82,7 +82,6 @@ and stripped of dashes, spaces and other non-isxn-13 characters.
 ]]
 
 local function is_valid_isxn_13 (isxn_str)
-
 	local temp=0;
 	isxn_str = { isxn_str:byte(1, 13) };										-- make a table of byte values '0' → 0x30 .. '9'  → 0x39
 	for i, v in ipairs( isxn_str ) do
@@ -99,8 +98,8 @@ Determines whether an ISBN string is valid.  Implements an ISBN validity check f
 
 ]]
 
-local function check_isbn (isbn_str, frame)
-	isbn_str = translatenum(isbn_str)
+local function check_isbn (isbn, frame)
+	local isbn_str = translatenum(isbn);
 	local function return_result (check, err_type)								-- local function to render the various error returns
 		if not check then														-- <check> false when there is an error
 			local template = ((frame.args.template_name and '' ~= frame.args.template_name) and frame.args.template_name) or nil;	-- get template name
@@ -171,7 +170,7 @@ section 2, pages 9–12.
 local function check_ismn (id, error_string)
 	local text;
 	local valid_ismn = true;
-	id = translatenum(id)
+	id = translatenum(id);
 	id=id:gsub( "[%s-–]", "" );													-- strip spaces, hyphens, and endashes from the ismn
 
 	if 13 ~= id:len() or id:match( "^9790%d*$" ) == nil then					-- ismn must be 13 digits and begin 9790
@@ -197,7 +196,8 @@ error message.
 
 ]]
 
-local function check_issn(id, error_string)
+local function check_issn(ids, error_string)
+	local id = translatenum(ids);
 	local issn_copy = id;		-- save a copy of unadulterated issn; use this version for display if issn does not validate
 	local text;
 	local valid_issn = true;
@@ -205,7 +205,6 @@ local function check_issn(id, error_string)
 	if not id:match ('^%d%d%d%d%-%d%d%d[%dX]$') then
 		return error_string;
 	end
-	id=translatenum(id)
 	id=id:gsub( "[%s-–]", "" );									-- strip spaces, hyphens, and endashes from the issn
 
 	if 8 ~= id:len() or nil == id:match( "^%d*X?$" ) then		-- validate the issn: 8 digits long, containing only 0-9 or X in the last position
