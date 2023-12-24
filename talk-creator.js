@@ -27,29 +27,42 @@
       })
       .done(function (data) {
         creationLookOut(pageName, function (creator, milisec) {
-          if (
-            data.query.pages[-1] &&
-            new Date().getTime() - milisec > 86400000 // 1 day
-          ) {
-            api
-              .postWithToken("csrf", {
-                action: "edit",
-                title: talkPageName,
-                text: "{{আলাপ পাতা}}",
-                summary: "আলাপ পাতা তৈরি করা হয়েছে",
-                format: "json",
-                createonly: true,
-              })
-              .done(function () {
-                if (creator !== mw.config.get("wgUserName")) {
+          if (data.query.pages[-1]) {
+            if (creator === mw.config.get("wgUserName")) {
+              api
+                .postWithToken("csrf", {
+                  action: "edit",
+                  title: talkPageName,
+                  text: "{{আলাপ পাতা}}",
+                  summary: "আলাপ পাতা তৈরি করা হয়েছে",
+                  format: "json",
+                  createonly: true,
+                })
+                .done(function () {
+                  alert("আলাপ পাতা তৈরি হয়েছে");
+                })
+                .fail(function (data) {
+                  console.log(data);
+                });
+            } else if (new Date().getTime() - milisec > 86400000) {
+              api
+                .postWithToken("csrf", {
+                  action: "edit",
+                  title: talkPageName,
+                  text: "{{আলাপ পাতা}}",
+                  summary: "আলাপ পাতা তৈরি করা হয়েছে",
+                  format: "json",
+                  createonly: true,
+                })
+                .done(function () {
                   addToWatchlist(3, pageName, function () {
                     alert("আলাপ পাতা তৈরি হয়েছে");
                   });
-                }
-              })
-              .fail(function (data) {
-                console.log(data);
-              });
+                })
+                .fail(function (data) {
+                  console.log(data);
+                });
+            }
           }
         });
       })
