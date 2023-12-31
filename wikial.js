@@ -220,7 +220,7 @@ function Wikial(label, preference) {
     if (typeof pref == "string") pref = { content: pref };
     else if (typeof pref != "object") throw new Error("Invalid data provided");
     protobj.add({
-      title: pref.title || data.label,
+      title: pref.title || "alert" + data.label,
       content: pref.content,
       type: pref.type || "warning",
     });
