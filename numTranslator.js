@@ -8,7 +8,7 @@
    * Config directives in:   ব্যবহারকারী:মোহাম্মদ মারুফ/numTranslator.js
    * creator:                মোহাম্মদ মারুফ
    * created on:             23 December, 2022
-   * last update:            27 December, 2022
+   * last update:            1 Januarry, 2024
    * version:                2.0.0
    */
   "use strict";
@@ -19,43 +19,8 @@
     "https://bn.wikipedia.org/w/index.php?title=ব্যবহারকারী:মোহাম্মদ মারুফ/default.css&action=raw&ctype=text/css",
     "text/css"
   );
-  //script is under construction
-  if (mw.config.get("wgUserName") == "মোহাম্মদ মারুফ") {
-    //comment it out in common.js
-    var api = new mw.Api();
-    api
-      .get({
-        action: "parse",
-        prop: "wikitext",
-        page: "ব্যবহারকারী:" + mw.config.get("wgUserName") + "/common.js",
-      })
-      .then(function (data) {
-        api
-          .postWithToken("csrf", {
-            action: "edit",
-            title: "ব্যবহারকারী:" + mw.config.get("wgUserName") + "/common.js",
-            text:
-              data.parse.wikitext["*"].replace(
-                /^(mw\.loader\.load|inportScript).+?\/numTranslator\.js.+?\);?/gm,
-                function (match) {
-                  return "/* " + match + " */";
-                }
-              ) ||
-              (function () {
-                throw "error";
-              })(),
-          })
-          .then(function (e) {
-            if (e.edit.result === "Success") {
-              alert(
-                "Brother, don't be sad. You can't use thos script now. It's not ready yet. Thanks for your interest.❤❤❤"
-              );
-            }
-          });
-      });
-  }
   //check if the page is in main namespace
-  if (mw.config.get("wgNamespaceNumber") === 0 || 2 || 3 || 5 || 11 || 101) {
+  if (mw.config.get("wgNamespaceNumber") === 0) {
     //add a button to the page
     var button = mw.util.addPortletLink(
       "p-tb",
@@ -115,50 +80,19 @@
     [/(?<=(=|\s+))(BC\s+)/gi, " খ্রিস্টাব্দ "],
     [/(?<=\d{4})s/gi, "এর দশকের"],
   ];
-
   function translateNumbers(data) {
-    var result = data
-      .replace(
-        /(?<!(({\d*}?)|\[([a-z]|\s|\d|\/)+|("|')\w+\d*|http(\S)+|[a-z]\d*|(>\S*)|((issn|pmid|isbn|oclc|s2cid)\s*=\s*(\d|-)*)|(ডিওআই|doi)\s*=\s*\d*.\d*|(\/[-._;()\/:A-Z0-9]+)))0(?!((\d*%)|(\d*[a-z])))/gi,
-        "০"
-      )
-      .replace(
-        /(?<!(({\d*}?)|\[([a-z]|\s|\d|\/)+|("|')\w+\d*|http(\S)+|[a-z]\d*|(>\S*)|((issn|pmid|isbn|oclc|s2cid)\s*=\s*(\d|-)*)|(ডিওআই|doi)\s*=\s*\d*.\d*|(\/[-._;()\/:A-Z0-9]+)))1(?!((\d*%)|(\d*[a-z])))/gi,
-        "১"
-      )
-      .replace(
-        /(?<!(({\d*}?)|\[([a-z]|\s|\d|\/)+|("|')\w+\d*|http(\S)+|[a-z]\d*|(>\S*)|((issn|pmid|isbn|oclc|s2cid)\s*=\s*(\d|-)*)|(ডিওআই|doi)\s*=\s*\d*.\d*|(\/[-._;()\/:A-Z0-9]+)))2(?!((\d*%)|(\d*[a-z])))/gi,
-        "২"
-      )
-      .replace(
-        /(?<!(({\d*}?)|\[([a-z]|\s|\d|\/)+|("|')\w+\d*|http(\S)+|[a-z]\d*|(>\S*)|((issn|pmid|isbn|oclc|s2cid)\s*=\s*(\d|-)*)|(ডিওআই|doi)\s*=\s*\d*.\d*|(\/[-._;()\/:A-Z0-9]+)))3(?!((\d*%)|(\d*[a-z])))/gi,
-        "৩"
-      )
-      .replace(
-        /(?<!(({\d*}?)|\[([a-z]|\s|\d|\/)+|("|')\w+\d*|http(\S)+|[a-z]\d*|(>\S*)|((issn|pmid|isbn|oclc|s2cid)\s*=\s*(\d|-)*)|(ডিওআই|doi)\s*=\s*\d*.\d*|(\/[-._;()\/:A-Z0-9]+)))4(?!((\d*%)|(\d*[a-z])))/gi,
-        "৪"
-      )
-      .replace(
-        /(?<!(({\d*}?)|\[([a-z]|\s|\d|\/)+|("|')\w+\d*|http(\S)+|[a-z]\d*|(>\S*)|((issn|pmid|isbn|oclc|s2cid)\s*=\s*(\d|-)*)|(ডিওআই|doi)\s*=\s*\d*.\d*|(\/[-._;()\/:A-Z0-9]+)))5(?!((\d*%)|(\d*[a-z])))/gi,
-        "৫"
-      )
-      .replace(
-        /(?<!(({\d*}?)|\[([a-z]|\s|\d|\/)+|("|')\w+\d*|http(\S)+|[a-z]\d*|(>\S*)|((issn|pmid|isbn|oclc|s2cid)\s*=\s*(\d|-)*)|(ডিওআই|doi)\s*=\s*\d*.\d*|(\/[-._;()\/:A-Z0-9]+)))6(?!((\d*%)|(\d*[a-z])))/gi,
-        "৬"
-      )
-      .replace(
-        /(?<!(({\d*}?)|\[([a-z]|\s|\d|\/)+|("|')\w+\d*|http(\S)+|[a-z]\d*|(>\S*)|((issn|pmid|isbn|oclc|s2cid)\s*=\s*(\d|-)*)|(ডিওআই|doi)\s*=\s*\d*.\d*|(\/[-._;()\/:A-Z0-9]+)))7(?!((\d*%)|(\d*[a-z])))/gi,
-        "৭"
-      )
-      .replace(
-        /(?<!(({\d*}?)|\[([a-z]|\s|\d|\/)+|("|')\w+\d*|http(\S)+|[a-z]\d*|(>\S*)|((issn|pmid|isbn|oclc|s2cid)\s*=\s*(\d|-)*)|(ডিওআই|doi)\s*=\s*\d*.\d*|(\/[-._;()\/:A-Z0-9]+)))8(?!((\d*%)|(\d*[a-z])))/gi,
-        "৮"
-      )
-      .replace(
-        /(?<!(({\d*}?)|\[([a-z]|\s|\d|\/)+|("|')\w+\d*|http(\S)+|[a-z]\d*|(>\S*)|((issn|pmid|isbn|oclc|s2cid)\s*=\s*(\d|-)*)|(ডিওআই|doi)\s*=\s*\d*.\d*|(\/[-._;()\/:A-Z0-9]+)))9(?!((\d*%)|(\d*[a-z])))/gi,
-        "৯"
-      )
-      .replace(/(ডিওআই|doi)=১\s+/gi, " ডিওআই=1");
+    var result = data.replace(
+      /((?<!(({|\[)[^|]+|.*:.*|"|<.+|\w+))\d+(?!(<\/.*>|"|\w+)))|(\d+\-\d+\-\d+)|\s+\d{1,4}[^(.|_)]/g,
+      (match) => {
+        var p = "";
+        if (!match) return match;
+        for (i in match) {
+          if (match[i].match(/\d/)) p += "০১২৩৪৫৬৭৮৯"[match[i]];
+          else p += match[i];
+        }
+        return p;
+      }
+    );
     for (var i = 0; i < translateDates.length; i++) {
       var thisregex = translateDates[i][0];
       var thisreplace = translateDates[i][1];

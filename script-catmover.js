@@ -1,4 +1,4 @@
-(function () {
+(function (Wikial) {
   /*
    ****************************************
    *** ব্যবহারকারী:মোহাম্মদ মারুফ/catmover.js: catmover module
@@ -15,13 +15,11 @@
     mw.config.get("wgAction") === "view" &&
     mw.config.get("wgNamespaceNumber") === 14
   ) {
-    var button = mw.util.addPortletLink(
-      "p-tb",
-      "#",
-      "বিষয়শ্রেণী স্থানান্তর",
-      "catmover"
-    );
-    $(button).click(function () {
+    var wikial = new Wikial("abc");
+    var toolbox = document.getElementById("mr-toolbox");
+    var button = document.createElement("button");
+    button.innerHTML = "cat mover";
+    button.addEventListener("click", () => {
       var initdata = [];
       function loop(continuet, callback) {
         api
@@ -44,7 +42,7 @@
           })
           .fail(function (data) {
             console.log(data);
-            error({
+            wikial.error({
               content: data.error,
             });
             location.reload();
@@ -62,10 +60,13 @@
               dtime(count * 15) +
               "। শুরু করা যাক?"
           );
-          alert(
-            "উকিপিডিয়ায় দ্রুত সম্পাদনা এড়ানোর কারণে একটু ধীরে সম্পাদনা করা হচ্ছে! সম্পাদনা শেষ হওয়া পর্যন্ত ট্যাবটি বন্ধ করবেন না।"
-          );
           if (!dis) location.reload();
+          var cas = new Wikial("case").case({
+            title: count + "টি বিষয়শ্রেণী সরানো হয়েছে!",
+            from: 0,
+            to: count,
+            content: "$to টি পাতার মধ্যে $from টি সরানো হয়েছে",
+          });
           var which = prompt(
             "যে বিষয়শ্রেণীতে স্থানান্তর করতে চান, তার নাম?",
             page.replace(/_/g, " ")
@@ -81,15 +82,10 @@
                 (res, msg) => {
                   if (res) {
                     serial++;
-                    if (!(serial % parseInt(5 + Math.random() * 5)))
-                      alert(
-                        count +
-                          " টি পাতার মধ্যে " +
-                          serial +
-                          "টি পাতা স্থানান্তর হয়েছে"
-                      );
+                    cas.update();
+                    console.log(data[i].title);
                   } else {
-                    alert(
+                    wikial.alert(
                       data[i].title +
                         " পাতাটিকে " +
                         which +
@@ -108,16 +104,19 @@
             }, 13.5 * 1000); // delay for 13.5 secs
           }
           iloop(i, () => {
-            alert(
-              count +
+            wikial.alert({
+              title: "সম্পূর্ণ হয়েছে",
+              content:
+                count +
                 "টি পাতার মধ্যে " +
                 serial +
                 "টি পাতাকে " +
                 which +
                 "এ স্থানন্তর করা সম্ভব হয়েছে। অর্থাৎ " +
                 Math.round((serial / count) * 100) +
-                "% স্থানন্তর করা সম্ভব হয়েছে।"
-            );
+                "% স্থানন্তর করা সম্ভব হয়েছে।",
+              type: "success",
+            });
             api //get pagedata
               .get({
                 action: "parse",
@@ -130,7 +129,7 @@
                 api //edit old page
                   .edit(page, function (revision) {
                     return {
-                      text: "{" + "{বিষয়শ্রেণী পুনর্নির্দেশ|" + which + "}}",
+                      text: "{{বিষয়শ্রেণী পুনর্নির্দেশ|" + which + "}}",
                       summary: "হালনাগাদ করা হয়েছে।",
                     };
                   })
@@ -205,4 +204,4 @@
     }
     toolbox.appendChild(button);
   }
-})();
+})(window.mr.Wikial);
