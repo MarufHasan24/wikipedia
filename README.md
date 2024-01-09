@@ -32,6 +32,8 @@ Here is a list of the files included in my scripts in wikipedia and in her siste
 
 `wikial.js`: The code in this file is specific to the "Wikial" module or feature of m It implements functionalities related to the Wikial aspect of my application, although the exact details are not provided.
 
+`catMover.js`: This module helps users to move parent catagorys of child catagories to anothe catagory, which already exist.
+
 ## Author
 
 - **Md. Maruf Hasan** | _User ID_ : [MarufHasan24](https://github.com/MarufHasan24)
