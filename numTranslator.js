@@ -82,7 +82,7 @@
   ];
   function translateNumbers(data) {
     var result = data.replace(
-      /((?<!(({|\[)[^|]+|.*:.*|"|<.+|\w+))\d+(?!(<\/.*>|"|\w+)))|(\d+\-\d+\-\d+)|\s+\d{1,4}[^(.|_)]/g,
+      /((?<!(({|\[)[^|]+|.*:.*|"|<.+|\w+))\d+(?!(<\/.*>|"|\w+)))|((তারিখ|বছর)=.+\|)/g,
       (match) => {
         var p = "";
         if (!match) return match;
