@@ -44,7 +44,7 @@
                 .fail(function (data) {
                   console.log(data);
                 });
-            } else if (new Date().getTime() - milisec > 86400000) {
+            } else if (milisec + 86400 * 1000 > new Date().getTime()) {
               api
                 .postWithToken("csrf", {
                   action: "edit",
@@ -56,7 +56,7 @@
                 })
                 .done(function () {
                   addToWatchlist(3, pageName, function () {
-                    alert("আলাপ পাতা তৈরি হয়েছে");
+                    console.log("আলাপ পাতা তৈরি হয়েছে");
                   });
                 })
                 .fail(function (data) {
