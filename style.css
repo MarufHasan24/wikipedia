@@ -1,0 +1,72 @@
+section#imp-exp {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    height: 50vh;
+    width: 50vw;
+    background-color: aqua;
+}
+
+section#imp-exp div.imp-exp-title {
+    width: 96%;
+    height: 19%;
+    padding: 1% 1% 0 1%;
+    background-color: #321c00;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+section#imp-exp div.imp-exp-title button {
+    width: 30%;
+    height: 100%;
+    border: none;
+    font-size: medium;
+    border-radius: 5px 5px 0 0;
+    background-color: #e2810255;
+    color: white;
+}
+
+section#imp-exp div.imp-exp-title button.active {
+    background-color: #ffd09399;
+    color: #222;
+    font-weight: 700;
+    font-size: large;
+}
+
+section#imp-exp div {
+    display: flex;
+    background-color: aliceblue;
+    height: calc(76% - 4px);
+    margin: 1%;
+    padding: 2px;
+    width: calc(98% - 4px);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: start;
+}
+
+section#imp-exp div textarea {
+    height: 15%;
+    width: 90%;
+    border: none;
+    background-color: #555;
+    color: white;
+    font-size: medium;
+    margin-left: 5%;
+    resize: none;
+}
+
+section#imp-exp div label {
+    height: 8%;
+    width: auto;
+    margin-left: 3%;
+}
+
+section#imp-exp div.hide {
+    display: none;
+}
