@@ -6,185 +6,62 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta title="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="mr-toolbox.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Natus aliquid facilis quas pariatur totam! Ab rerum,
-        nisi
-        vero consequuntur impedit quia dolorem nemo suscipit dolore quam, vel reiciendis, ea magni!
-    </p>
-    <p class="lorem">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates sequi repudiandae suscipit fugiat reiciendis
-        consectetur iste ducimus vitae voluptate id, eos dolore, dignissimos illum optio laborum doloribus ipsa
-        exercitationem quas?
-    </p>
-    <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Natus aliquid facilis quas pariatur totam! Ab rerum,
-        nisi
-        vero consequuntur impedit quia dolorem nemo suscipit dolore quam, vel reiciendis, ea magni!
-    </p>
-    <p class="lorem">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates sequi repudiandae suscipit fugiat reiciendis
-        consectetur iste ducimus vitae voluptate id, eos dolore, dignissimos illum optio laborum doloribus ipsa
-        exercitationem quas?
-    </p>
-    <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Natus aliquid facilis quas pariatur totam! Ab rerum,
-        nisi
-        vero consequuntur impedit quia dolorem nemo suscipit dolore quam, vel reiciendis, ea magni!
-    </p>
-    <p class="lorem">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates sequi repudiandae suscipit fugiat reiciendis
-        consectetur iste ducimus vitae voluptate id, eos dolore, dignissimos illum optio laborum doloribus ipsa
-        exercitationem quas?
-    </p>
-    <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Natus aliquid facilis quas pariatur totam! Ab rerum,
-        nisi
-        vero consequuntur impedit quia dolorem nemo suscipit dolore quam, vel reiciendis, ea magni!
-    </p>
-    <p class="lorem">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates sequi repudiandae suscipit fugiat reiciendis
-        consectetur iste ducimus vitae voluptate id, eos dolore, dignissimos illum optio laborum doloribus ipsa
-        exercitationem quas?
-    </p>
-</body>
-<script src="wikial.js"></script>
-<!-- <script>
-    var wikial = new Wikial("alert");
-    var wikial2 = new Wikial("case");
-    //wikial.log("hello world");
-    var to = 15
-    var cae = wikial2.case({
-        title: "Wikial 1",
-        content: "$from of $to work has been done",
-        from: 0,
-        to: to,
-        type: "success"
-    })
-    i = 0;
-    function a(i) {
-        if (i < to) {
-            fetch("https://6wrlmkp9u2.execute-api.us-east-1.amazonaws.com/?sleep=" + Math.floor(Math.random() * 700))
-                .then(response => response.json())
-                .then(data => {
-                    cae.update({ type: ["success", "info", "warning", "error", "none"][Math.floor(Math.random() * 3) + 2] })
-                    i++;
-                    console.log(i, data.params.sleep);
-                    a(i)
-                });
-        } else {
-            wikial2.alert({
-                title: "Wikial 2",
-                content: "All work has been done",
-                type: "success"
-            })
-
-        }
-    }
-    a(i)
-</script> -->
-<style>
-    .wikial {
-        background-color: #f1f1f1;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        padding: 6px 12px;
-        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-        width: fit-content;
-        display: block;
-        margin: 0 auto;
-        position: fixed;
-        top: 5%;
-        left: 50%;
-        transform: translate(-50%, 0%);
-
-    }
-
-    .wikial #wikial-title {
-        font-size: 1.5em;
-        font-weight: bold;
-        margin-bottom: 0.5em;
-        text-transform: capitalize;
-        min-width: 150px;
-    }
-
-    .wikial #wikial-content {
-        font-size: 1em;
-        font-weight: normal;
-        margin-bottom: 0.5em;
-        text-transform: capitalize;
-        min-width: 150px;
-    }
-</style>
-
-<div>
-    <div class="tray">
-        <label for="title">Script title or url</label>
-        <input id="title" type="text" required />
-        <label for="wiki">Target wiki (if current wiki, then no required)</label>
-        <input id="wiki" type="text" placeholder="EG: bn.wikipedia.org" />
-        <label for="expire-time">Expire time (Leave it blank for forever)</label>
-        <input id="expire-time" type="time" placeholder="EG: 12:05 AM" />
-        <label for="expire-time">Expire date (Leave it blank for forever)</label>
-        <input id="expire-time" type="date" placeholder=" EG: 2021-12-31" />
-        <button id="tray-button">Import</button>
+    <div>
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat, accusantium! Facere ratione quo, mollitia
+        consequatur
+        possimus, totam fugit necessitatibus dolore minus cumque consectetur, quis enim praesentium fuga. Voluptatibus,
+        nobis
+        voluptate.
     </div>
-</div>
+    <section id="imp-exp">
+        <div class="imp-exp-title">
+            <button class="active" id="import">Import</button>
+            <button style="right:0" id="export">Export</button>
+        </div>
+        <div class="import">
+            <label for="imp-wiki">Wiki name</label>
+            <textarea id="imp-wiki" placeholder="wikipedia"></textarea>
+            <label for="imp-lang">Language Name</label>
+            <textarea id="imp-lang" placeholder="bn"></textarea>
+            <label for="imp-replace">পরিবর্তন সমূহ</label>
+            <textarea id="imp-replace" placeholder="উইকিপিডিয়া;উইকিউক্তি,wikipedia;wikiquote"></textarea>
+        </div>
+        <div class="export hide">
+            <label for="exp-wiki">Wiki name</label>
+            <textarea id="exp-wiki" placeholder="wikiquote"></textarea>
+            <label for="exp-lang">Language Name</label>
+            <textarea id="exp-lang" placeholder="bn"></textarea>
+            <label for="exp-replace">পরিবর্তন সমূহ</label>
+            <textarea id="exp-replace" placeholder="উইকিপিডিয়া;উইকিউক্তি,wikipedia;wikiquote"></textarea>
+        </div>
+    </section>
+    <div>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto cum quisquam cumque fugit, porro
+        laboriosam quos eius atque ipsa. Iste voluptatum maxime rerum corporis tempore iusto dicta sit deleniti
+        dignissimos!
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores alias maxime, saepe fugiat non dicta qui
+        vero perspiciatis tenetur optio accusantium porro ex autem. Assumenda id saepe possimus corrupti eos!
+    </div>
+</body>
 <script>
-    var api = new mw.Api();
-    var tray = document.querySelector(".tray");
-    var title = document.querySelector("#title");
-    var wiki = document.querySelector("#wiki");
-    var button = document.querySelector("#tray-button");
-    var expireitime = document.querySelector("#expire-time");
-    button.addEventListener("click", function () {
-        var urlregex = /^(https:\/\/)(\w{2,4}|commons)\.([a-z]+\.org)\/wiki\/.+\/.+\.js$/
-        var titleregex = /^[^https:]+\:.+\/.+\.js$/
-        if (title.value.match(urlregex)) {
-            var url = title.value + "?action=raw&origin=*";
-        } else if (title.value.match(titleregex)) {
-            if (wiki.trim()) {
-                var url = "https://" + wiki.trim() + "/w/index.php?title=" + title.value.split(":")[1] + "&action=raw";
-            } else {
-                var url = location.origin + "w/index.php?title=" + title.value + "&action=raw&ctype=text/javascript";
-            }
-        } else {
-            alert("Invalid script title or url");
-            return;
-        }
-        if (expireitime.value) {
-            var expire = new Date(expireitime.value).getTime();
-        } else {
-            saveincommons(url);
-        }
-        //search for script
-        fetch(url)
-            .then(response => response.text())
-            .then(data => {
-                saveIt(url, data);
-            })
-            .catch(err => {
-                alert("Error: " + err);
-            })
-    })
-    function saveIt(url, data) {
-        var storage = localStorage.getItem("mr-script-tray");
-        if (storage) {
-            var scripts = JSON.parse(storage);
-        } else {
-            var scripts = [];
-        }
-        scripts.push({ url, data });
-        localStorage.setItem("mr-script-tray", JSON.stringify(scripts));
+    let importB = document.getElementById("import");
+    let exportB = document.getElementById("export");
+    let importD = document.getElementsByClassName("import")[0];
+    let exportD = document.getElementsByClassName("export")[0];
+    importB.onclick = function () {
+        importB.className = "active";
+        exportD.classList.add("hide");
+        exportB.className = "";
+        importD.classList.remove("hide");
     }
-    function saveincommons(url) {
-        if (url.includes("title")) {
-            
-        }else
+    exportB.onclick = function () {
+        exportB.className = "active";
+        importD.classList.add("hide");
+        importB.className = "";
+        exportD.classList.remove("hide");
     }
 </script>
 
