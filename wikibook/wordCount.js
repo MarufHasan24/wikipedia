@@ -43,7 +43,8 @@
   }
   if (
     mw.config.get("wgAction") === "view" &&
-    mw.config.get("wgNamespaceNumber") === 0
+    (mw.config.get("wgNamespaceNumber") === 0 ||
+      mw.config.get("wgNamespaceNumber") === 104)
   ) {
     let key = Number(localStorage.getItem("wordCounter"));
     var button = $(
